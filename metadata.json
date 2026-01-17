@@ -1,0 +1,5 @@
+{
+  "name": "DailyStandup.exe",
+  "description": "A hacker-styled developer tool for managing daily standup meetings with interactive timers, terminal logs, and random speaker selection.",
+  "requestFramePermissions": []
+}
