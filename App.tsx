@@ -5,7 +5,8 @@ import { TERMINAL_BOOT_LOGS, MAX_TIME_SECONDS } from './constants';
 import SetupView from './components/SetupView';
 import DailyView from './components/DailyView';
 import FinishedView from './components/FinishedView';
-import { Terminal as TerminalIcon, ShieldAlert } from 'lucide-react';
+import HistoryView from './components/HistoryView';
+import { Terminal as TerminalIcon, ShieldAlert, GitBranch } from 'lucide-react';
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.SETUP);
@@ -63,6 +64,15 @@ const App: React.FC = () => {
     addLog("Standup cycle completed successfully.", "SUCCESS");
   }, [addLog]);
 
+  const showHistory = useCallback(() => {
+    setMode(AppMode.HISTORY);
+    addLog("Loading daily history log...", "INFO");
+  }, [addLog]);
+
+  const backFromHistory = useCallback(() => {
+    setMode(AppMode.SETUP);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-slate-100 flex flex-col p-4 md:p-6 font-sans selection:bg-indigo-500/30">
       {/* Header aligned as per screenshot */}
@@ -77,13 +87,23 @@ const App: React.FC = () => {
           </div>
         </div>
         
-        {mode !== AppMode.SETUP && (
+        {mode !== AppMode.SETUP && mode !== AppMode.HISTORY && (
           <button 
             onClick={resetAll}
             className="flex items-center gap-2 px-4 py-2 text-[10px] font-mono border border-red-500/30 rounded-lg hover:bg-red-500/10 transition-all text-red-500 uppercase tracking-widest font-bold bg-red-500/5"
           >
             <ShieldAlert className="w-3.5 h-3.5" />
             Abort_System
+          </button>
+        )}
+
+        {mode === AppMode.SETUP && (
+          <button 
+            onClick={showHistory}
+            className="flex items-center gap-2 px-4 py-2 text-[10px] font-mono border border-amber-500/30 rounded-lg hover:bg-amber-500/10 transition-all text-amber-500 uppercase tracking-widest font-bold bg-amber-500/5"
+          >
+            <GitBranch className="w-3.5 h-3.5" />
+            View_History
           </button>
         )}
       </header>
@@ -110,6 +130,10 @@ const App: React.FC = () => {
             participants={participants} 
             onReset={resetAll} 
           />
+        )}
+
+        {mode === AppMode.HISTORY && (
+          <HistoryView onBack={backFromHistory} />
         )}
       </main>
     </div>

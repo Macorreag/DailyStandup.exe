@@ -16,7 +16,17 @@ export interface Participant {
 export enum AppMode {
   SETUP = 'SETUP',
   DAILY = 'DAILY',
-  SUMMARY = 'SUMMARY'
+  SUMMARY = 'SUMMARY',
+  HISTORY = 'HISTORY'
+}
+
+export interface DailyHistoryEntry {
+  id: string;
+  date: string;
+  participantsOrder: string[];
+  nextOwner: string;
+  totalDuration: number;
+  createdAt: string;
 }
 
 export interface LogEntry {
