@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserPlus, X, Play, Save, Check, Database, Edit3, ArrowDownToLine, ArrowUpFromLine, Zap, ZapOff, Clock } from 'lucide-react';
 import { DEFAULT_NAMES, MAX_TIME_SECONDS } from '../constants';
+import HistoryPanel from './HistoryPanel';
 
 interface SetupViewProps {
   onStart: (names: string[], autoTransition: boolean, maxSeconds: number) => void;
@@ -216,8 +217,12 @@ const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
         </div>
       </div>
 
-      {/* SECCIÓN DERECHA: GESTIÓN DE LOCAL STORAGE */}
+      {/* SECCIÓN DERECHA: GESTIÓN DE LOCAL STORAGE Y HISTORIAL */}
       <div className="lg:col-span-5 space-y-6">
+        {/* HISTORIAL DE DAILYS */}
+        <HistoryPanel />
+
+        {/* PERSISTENT STORAGE HUB */}
         <section className="bg-slate-900/60 border border-slate-700/60 rounded-2xl p-6 backdrop-blur-sm border-dashed">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xs font-mono text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">

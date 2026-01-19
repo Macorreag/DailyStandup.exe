@@ -16,8 +16,7 @@ export interface Participant {
 export enum AppMode {
   SETUP = 'SETUP',
   DAILY = 'DAILY',
-  SUMMARY = 'SUMMARY',
-  HISTORY = 'HISTORY'
+  SUMMARY = 'SUMMARY'
 }
 
 export interface DailyHistoryEntry {
