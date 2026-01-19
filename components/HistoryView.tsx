@@ -43,8 +43,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onBack }) => {
 
   const renderGitLogEntry = (entry: DailyHistoryEntry, index: number) => {
     const isFirst = index === 0;
+    const displayDate = entry.id.split('-').slice(0, 3).join('-');
     return (
-      <div key={entry.id + entry.createdAt} className="mb-6 animate-fade-in">
+      <div key={entry.createdAt} className="mb-6 animate-fade-in">
         {/* Git branch line indicator */}
         <div className="flex items-start gap-4">
           {/* Branch visual */}
@@ -60,7 +61,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onBack }) => {
             {/* Commit header */}
             <div className="flex items-center gap-2">
               <span className="text-amber-400 font-mono text-sm">commit</span>
-              <span className="text-amber-400/70 font-mono text-sm">{entry.id}</span>
+              <span className="text-amber-400/70 font-mono text-sm">{displayDate}</span>
               {isFirst && (
                 <span className="text-[9px] font-mono bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 ml-2">
                   HEAD

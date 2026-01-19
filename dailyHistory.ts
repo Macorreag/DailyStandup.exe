@@ -40,7 +40,7 @@ export function createDailyHistoryEntry(
 ): DailyHistoryEntry {
   const now = new Date();
   return {
-    id: now.toISOString().split('T')[0],
+    id: `${now.toISOString().split('T')[0]}-${now.getTime()}`,
     date: now.toISOString(),
     participantsOrder,
     nextOwner,
