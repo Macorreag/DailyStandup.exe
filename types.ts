@@ -19,6 +19,15 @@ export enum AppMode {
   SUMMARY = 'SUMMARY'
 }
 
+export interface DailyHistoryEntry {
+  id: string;
+  date: string;
+  participantsOrder: string[];
+  nextOwner: string;
+  totalDuration: number;
+  createdAt: string;
+}
+
 export interface LogEntry {
   id: string;
   timestamp: string;

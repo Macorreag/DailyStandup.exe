@@ -1,7 +1,8 @@
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Participant, ParticipantStatus } from '../types';
 import { Trophy, Crown, RefreshCw, BarChart3, Users, Clock, Search, Loader2 } from 'lucide-react';
+import { saveDailyHistory, createDailyHistoryEntry } from '../dailyHistory';
 
 interface FinishedViewProps {
   participants: Participant[];
@@ -12,11 +13,35 @@ const FinishedView: React.FC<FinishedViewProps> = ({ participants, onReset }) =>
   const [isRevealed, setIsRevealed] = useState(false);
   const [scannedName, setScannedName] = useState('');
   const [revealProgress, setRevealProgress] = useState(0);
+  const historySavedRef = useRef(false);
 
   // El líder real se decide al inicio pero se oculta tras la animación
   const nextLeader = useMemo(() => {
     return participants[Math.floor(Math.random() * participants.length)];
   }, [participants]);
+
+  // Calculate participation order based on completion
+  const participantsOrder = useMemo(() => {
+    return participants.map(p => p.name);
+  }, [participants]);
+
+  // Calculate total duration
+  const totalDuration = useMemo(() => {
+    return participants.reduce((acc, p) => acc + p.speakingTime, 0);
+  }, [participants]);
+
+  // Save to history when revealed
+  useEffect(() => {
+    if (isRevealed && !historySavedRef.current && nextLeader) {
+      historySavedRef.current = true;
+      const entry = createDailyHistoryEntry(
+        participantsOrder,
+        nextLeader.name,
+        totalDuration
+      );
+      saveDailyHistory(entry);
+    }
+  }, [isRevealed, nextLeader, participantsOrder, totalDuration]);
 
   useEffect(() => {
     let iteration = 0;
