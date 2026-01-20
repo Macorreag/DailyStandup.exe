@@ -27,6 +27,7 @@ const DailyView: React.FC<DailyViewProps> = ({
   const [currentSpeakerId, setCurrentSpeakerId] = useState<string | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionTick, setSelectionTick] = useState('');
+  const [newParticipantName, setNewParticipantName] = useState('');
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const autoSelectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -118,6 +119,31 @@ const DailyView: React.FC<DailyViewProps> = ({
     addLog(`Registry reverted: Node [${participants.find(p=>p.id===id)?.name}] re-queued.`, 'INFO');
   };
 
+  const addNewParticipant = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = newParticipantName.trim();
+    
+    if (!trimmedName) return;
+    
+    // Check if participant already exists
+    if (participants.some(p => p.name.toLowerCase() === trimmedName.toLowerCase())) {
+      addLog(`Node [${trimmedName}] already exists in the system.`, 'WARN');
+      setNewParticipantName('');
+      return;
+    }
+    
+    const newParticipant: Participant = {
+      id: crypto.randomUUID(),
+      name: trimmedName,
+      status: ParticipantStatus.PENDING,
+      speakingTime: 0
+    };
+    
+    setParticipants(prev => [...prev, newParticipant]);
+    addLog(`New node registered: [${trimmedName}] added to queue.`, 'INFO');
+    setNewParticipantName('');
+  };
+
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -195,6 +221,27 @@ const DailyView: React.FC<DailyViewProps> = ({
                   </div>
                 );
               })}
+            </div>
+            
+            {/* Optional: Add new participant input */}
+            <div className="mt-3 pt-3 border-t border-slate-800/30">
+              <form onSubmit={addNewParticipant} className="flex gap-2">
+                <input
+                  type="text"
+                  value={newParticipantName}
+                  onChange={(e) => setNewParticipantName(e.target.value)}
+                  placeholder="Add participant..."
+                  className="flex-1 bg-slate-900/30 border border-slate-800/40 rounded-lg px-3 py-2 text-xs text-slate-400 placeholder:text-slate-600 focus:outline-none focus:border-slate-700/60 focus:bg-slate-900/40 transition-all"
+                />
+                <button
+                  type="submit"
+                  disabled={!newParticipantName.trim()}
+                  className="px-3 py-2 bg-slate-800/40 border border-slate-700/40 rounded-lg text-xs text-slate-500 hover:text-slate-400 hover:border-slate-600/60 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  title="Add participant"
+                >
+                  <ArrowRightCircle className="w-3.5 h-3.5" />
+                </button>
+              </form>
             </div>
           </section>
         </div>
